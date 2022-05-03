@@ -1,1 +1,26 @@
+import pygame
+import sys
+import random
 
+
+pygame.init()
+
+
+gravity = 0.25
+
+screen = pygame.display.set_mode((576, 1024))
+
+background = pygame.image.load("assets/background-day.png").convert()
+background = pygame.transform.scale2x(background)
+
+bird = pygame.image.load("assets/bluebird-midflap.png").convert_alpha()
+bird = pygame.transform.scale2x(bird)
+while True:
+
+   for event in pygame.event.get():
+       if event.type == pygame.QUIT:
+          pygame.quit()
+          sys.exit()
+          
+   screen.blit(background, (0, 0))
+   pygame.display.update()
