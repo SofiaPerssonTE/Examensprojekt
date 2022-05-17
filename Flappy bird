@@ -8,11 +8,21 @@ def game_floor():
     screen.blit((floor_base, (floor_x_pos + 576, 900))
 
 
+def check_collision():
+
+    if bird_rect.top <= -100 or bird_rect.bottom >= 900:
+       return False
+    return True
+
+def create_pipe():
+    random_pipe_pos = pipe.height
+    pipe = pipe.surface.get_rect(midbottom = (200,random_pipe_pos)
+
 
 pygame.init()
 clock = pygame.time.Clock()
 
-gravity = 3
+gravity = 0.25
 bird_movement = 0
 screen = pygame.display.set_mode((576, 1024))
 
@@ -24,9 +34,23 @@ bird = pygame.transform.scale2x(bird)
 bird_rect = bird.get_rect(center=(100,512))
 
 floor_base = pygame.image.load("assets/base.png").convert()
-floor_base = pygame.transform.scale2x(bird)
+floor_base = pygame.transform.scale2x(floor_base)
 floor_x_pos = 0
 
+message = pygame.image.load("assets/message.png").convert.alpha()
+message = pygame.transform.scale2x(message)
+game_over_rect = message.get_rect(center = (288,512))
+
+
+
+pipe_surface = pygame.image.load('assets/pipe-green.png')
+pipe_surface = pygame.transform.scale2x(pipe_surface)
+pipe_list = []
+pipe_height = 300
+SPAWNPIPE = pygame.USEREVENT
+pygame.time.set_timer(SPAWNPIPE, 1200)
+
+game_active = True
 while True:
 
    for event in pygame.event.get():
@@ -34,18 +58,25 @@ while True:
           pygame.quit()
           sys.exit()
        if event.type == pygame.KEYDOWN:
-          if event.key == pygame.K_SPACE:
+          if event.key == pygame.K_SPACE and game_active:
              bird_movement = 0
              bird_movement -= 12
-             bird_rect.center = (100, 512)
-      
+          if event.key == pygame.K_SPACE and game_active == False:
+             bird.rect.center = (100, 512)
+             bird movement = 0
+             game_active = True
+       if event.type == SPAWNTIME and game_active:
+          pipe.list.append(create_pipe())
+             
    screen.blit(background, (0, 0))     
+   if game_active:
+      bird_movement += gravity
+      bird_rect.centery += bird_movement
+      screen.blit(bird, (bird_rect))
    
-   bird_movement += gravity
-   bird_rect.centery += bird_movement
-   screen.blit(bird, (bird_rect))
-   
-   check_collision
+      game_active = check_collision()
+   else:
+        screen.blit(message, game_over_rect=
    
    floor_x_pos -= 1
    game_floor()
