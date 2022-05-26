@@ -8,16 +8,41 @@ def game_floor():
     screen.blit((floor_base, (floor_x_pos + 576, 900))
 
 
-def check_collision():
+def check_collision(pipes):
+
+    for pipe in pipes
+    
+        if bird_rect.colliderect(pipe):
+           return False
 
     if bird_rect.top <= -100 or bird_rect.bottom >= 900:
        return False
     return True
 
-def create_pipe():
-    random_pipe_pos = pipe.height
-    pipe = pipe.surface.get_rect(midbottom = (200,random_pipe_pos)
 
+def create_pipe():
+
+    random_pipe_pos = random.choice(pipe.height)
+    top_pipe = pipe.surface.get_rect(midbottom = (700,random_pipe_pos-300))
+    bottom_pipe = pipe.surface.get_rect(midtop = (700,random_pipe_pos))
+    return bottom_pipe, top_pipe
+
+
+def move_pipes(pipes):
+    for pipe in pipes:
+        pipe.centerx -= 5
+     
+    return pipes
+    
+    
+def draw_pipes(pipes): 
+    for pipe in pipes:
+        if pipe.bottom >= 1024:
+           screen.blit(pipe_surface,pipe)
+        else:
+            flip_pipe = pygame.transform.flip(pipe_surface, False, True)
+            screen.blit(flip_pipe, pipe)
+            
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -46,7 +71,7 @@ game_over_rect = message.get_rect(center = (288,512))
 pipe_surface = pygame.image.load('assets/pipe-green.png')
 pipe_surface = pygame.transform.scale2x(pipe_surface)
 pipe_list = []
-pipe_height = 300
+pipe_height = [400,600,800]
 SPAWNPIPE = pygame.USEREVENT
 pygame.time.set_timer(SPAWNPIPE, 1200)
 
@@ -64,19 +89,25 @@ while True:
           if event.key == pygame.K_SPACE and game_active == False:
              bird.rect.center = (100, 512)
              bird movement = 0
+             pipe_list.clear()
              game_active = True
        if event.type == SPAWNTIME and game_active:
-          pipe.list.append(create_pipe())
+          pipe_list.extend(create_pipe())      
              
-   screen.blit(background, (0, 0))     
+  screen.blit(background, (0, 0))     
    if game_active:
       bird_movement += gravity
       bird_rect.centery += bird_movement
       screen.blit(bird, (bird_rect))
    
-      game_active = check_collision()
+      
+      
+     pipe_list =  move_pipes(pipes_list)
+      draw pipes(pipe_list)
+      
+      game_active = check_collision(pipe_list)
    else:
-        screen.blit(message, game_over_rect=
+        screen.blit(message, game_over_rect)
    
    floor_x_pos -= 1
    game_floor()
